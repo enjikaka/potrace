@@ -69,7 +69,7 @@ function Curve(n) {
 
 export let imgElement;
 
-const imgCanvas = DenoCanvas.createCanvas();
+let imgCanvas;
 
 let bm = null,
   pathlist = [],
@@ -106,9 +106,10 @@ export function setParameter(obj) {
 }
 
 function loadCanvas() {
-  imgCanvas.width = imgElement.width;
-  imgCanvas.height = imgElement.height;
-  var ctx = imgCanvas.getContext('2d');
+  imgCanvas = DenoCanvas.createCanvas(imgElement.width, imgElement.height);
+
+  const ctx = imgCanvas.getContext('2d');
+
   ctx.drawImage(imgElement, 0, 0);
 }
 
