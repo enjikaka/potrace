@@ -4,7 +4,7 @@ No longer maintained. (Never been maintained before.)
 
 Licensed under GPL. (You know it...)
 
-Ditsributed  without any waranty. 
+Ditsributed  without any waranty.
 
 potrace
 =======
