@@ -83,17 +83,14 @@ let bm = null,
     opttolerance: 0.2
   };
 
-imgElement.onload = function () {
-  loadCanvas();
-  loadBm();
-};
-
 export async function loadImage(file) {
   if (info.isReady) {
     clear();
   }
 
   imgElement = await DenoCanvas.loadImage(file);
+  loadCanvas();
+  loadBm();
 }
 
 export function setParameter(obj) {
@@ -106,7 +103,7 @@ export function setParameter(obj) {
 }
 
 function loadCanvas() {
-  imgCanvas = DenoCanvas.createCanvas(imgElement.width, imgElement.height);
+  imgCanvas = DenoCanvas.createCanvas(imgElement.width(), imgElement.height());
 
   const ctx = imgCanvas.getContext('2d');
 
@@ -1182,6 +1179,7 @@ export function process(c) {
   callback = null;
 }
 
+
 function clear() {
   bm = null;
   pathlist = [];
@@ -1189,8 +1187,7 @@ function clear() {
   info.isReady = false;
 }
 
-export function getSVG(size, opt_type) {
-
+export function getSVG(size = 1, opt_type) {
   function path(curve) {
 
     function bezier(i) {
@@ -1225,16 +1222,23 @@ export function getSVG(size, opt_type) {
     return p;
   }
 
-  var w = bm.w * size, h = bm.h * size,
-    len = pathlist.length, c, i, strokec, fillc, fillrule;
+  const w = bm.w * size;
+  const h = bm.h * size;
+  const len = pathlist.length;
+  let c;
+  let i;
+  let strokec;
+  let fillc;
+  let fillrule;
 
-  var svg = '<svg id="svg" version="1.1" width="' + w + '" height="' + h +
-    '" xmlns="http://www.w3.org/2000/svg">';
+  let svg = `<svg id="svg" version="1.1" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`;
   svg += '<path d="';
+
   for (i = 0; i < len; i++) {
     c = pathlist[i].curve;
     svg += path(c);
   }
+
   if (opt_type === "curve") {
     strokec = "black";
     fillc = "none";
@@ -1244,6 +1248,8 @@ export function getSVG(size, opt_type) {
     fillc = "black";
     fillrule = ' fill-rule="evenodd"';
   }
+
   svg += '" stroke="' + strokec + '" fill="' + fillc + '"' + fillrule + '/></svg>';
+
   return svg;
 }
